@@ -1,0 +1,34 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://${DATABASE_CNAME:localhost:5400}/posts
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    driverClassName: org.postgresql.Driver
+  cloud:
+    openfeign:
+      client:
+        config:
+          user-service:
+            url: http://${USERSERVICE_CNAME:localhost}:${APPLICATION_PORT:8082}
+
+server:
+  port: ${APPLICATION_PORT:8081}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  health:
+    key:
+      enabled: db,diskSpace,ping
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
